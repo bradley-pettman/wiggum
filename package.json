@@ -25,7 +25,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.2.50",
     "@inkjs/ui": "^2.0.0",
     "ink": "^6.0.0",
     "react": "^19.0.0",

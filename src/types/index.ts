@@ -16,10 +16,29 @@ export type {
 export type {
   SessionStatus,
   Session,
-  SessionLogEventType,
-  SessionLogEvent,
+  SessionLogEntry,
   SessionSummary,
 } from "./session.js";
+
+export type {
+  TextBlock,
+  ThinkingBlock,
+  ToolUseBlock,
+  ToolResultBlock,
+  AssistantContentBlock,
+  UserContentBlock,
+  MessageUsage,
+  CLISystemInitMessage,
+  CLICompactBoundaryMessage,
+  CLISystemMessage,
+  CLIAssistantMessage,
+  CLIUserMessage,
+  ModelUsageEntry,
+  CLIResultSuccess,
+  CLIResultError,
+  CLIResultMessage,
+  CLIStreamMessage,
+} from "./claude-cli.js";
 
 export type {
   PanelId,
@@ -40,5 +59,5 @@ export type {
   LoopRunnerEvent,
   LoopRunnerConfig,
   PromptVariables,
-  SessionWatcher,
+  ClaudeProcessOptions,
 } from "./orchestrator.js";

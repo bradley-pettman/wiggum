@@ -2,8 +2,11 @@
  * Types for loop iteration sessions.
  *
  * Each iteration of a Ralph loop spawns a headless Claude Code session
- * via the Agent SDK. These types track those sessions and their output.
+ * via `claude -p --output-format stream-json`. These types track those
+ * sessions and their output.
  */
+
+import type { CLIStreamMessage } from "./claude-cli.js";
 
 // ---------------------------------------------------------------------------
 // Session
@@ -19,8 +22,8 @@ export type SessionStatus =
 export interface Session {
   /** Internal wiggum session ID. */
   id: string;
-  /** Claude Code session ID (from the Agent SDK init message). */
-  agentSessionId: string;
+  /** Claude Code session ID (from the stream-json init message). */
+  claudeSessionId: string;
   /** The loop this session belongs to. */
   loopId: string;
   /** 1-indexed iteration number within the loop. */
@@ -36,30 +39,29 @@ export interface Session {
   commitHash?: string;
   /** Total cost in USD for this session. */
   costUsd?: number;
-  /** Total tokens consumed. */
+  /** Total input + output tokens consumed. */
   tokensUsed?: number;
-  /** Path to the session transcript / log file. */
+  /** Number of agentic turns in the session. */
+  numTurns?: number;
+  /** Wall-clock duration in ms. */
+  durationMs?: number;
+  /** Path to the session transcript (NDJSON log file). */
   logPath: string;
 }
 
 // ---------------------------------------------------------------------------
-// Session Log Events (streamed from the Agent SDK)
+// Session Log Event
 // ---------------------------------------------------------------------------
 
-export type SessionLogEventType =
-  | "system_init"
-  | "assistant_text"
-  | "assistant_tool_use"
-  | "tool_result"
-  | "error"
-  | "result";
-
-/** A single event in the session log, derived from Agent SDK SDKMessages. */
-export interface SessionLogEvent {
+/**
+ * A timestamped wrapper around a raw CLI stream message,
+ * persisted to the session's NDJSON log file.
+ */
+export interface SessionLogEntry {
+  /** ISO timestamp when this message was received. */
   timestamp: string;
-  type: SessionLogEventType;
-  /** The raw event payload (shape depends on type). */
-  data: unknown;
+  /** The raw message from `claude -p --output-format stream-json`. */
+  message: CLIStreamMessage;
 }
 
 // ---------------------------------------------------------------------------
@@ -73,5 +75,6 @@ export interface SessionSummary {
   status: SessionStatus;
   taskTitle?: string;
   costUsd?: number;
-  duration?: number; // seconds
+  numTurns?: number;
+  durationMs?: number;
 }
