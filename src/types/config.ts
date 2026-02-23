@@ -6,8 +6,7 @@
  *
  * .wiggum/
  * ├── config.yaml          # Loop configuration (serialized WiggumConfig)
- * ├── SPEC.md              # Requirements / PRD
- * ├── PLAN.md              # Implementation plan with tasks
+ * ├── PLAN.md              # Implementation plan with tasks (references spec)
  * ├── PROMPT.md            # Prompt template
  * ├── BACKPRESSURE.md      # Optional agent-facing backpressure context
  * └── sessions/            # Session logs
@@ -15,6 +14,10 @@
  *     │   └── transcript.jsonl
  *     └── session-002/
  *         └── transcript.jsonl
+ *
+ * The spec lives wherever the plan references it — could be in .wiggum/,
+ * in the project root, or anywhere else. The plan's frontmatter contains
+ * a `spec` field pointing to the spec file path.
  */
 
 import type { LoopMode, BackpressureTrigger } from "./loop.js";
@@ -47,20 +50,30 @@ export interface WiggumConfig {
 // ---------------------------------------------------------------------------
 
 /**
- * Tasks in PLAN.md are stored as a markdown checklist with YAML frontmatter
- * for structured metadata:
+ * PLAN.md uses YAML frontmatter to declare metadata:
  *
  * ```markdown
  * ---
- * id: task-001
- * priority: 1
- * dependencies: []
+ * spec: ../SPEC.md
  * ---
- * - [ ] Implement user authentication
+ *
+ * ## Tasks
+ *
+ * - [ ] <!-- id:task-001 priority:1 deps: -->
+ *   **Implement user authentication**
  *   Description of what needs to happen...
+ *
+ * - [ ] <!-- id:task-002 priority:2 deps:task-001 -->
+ *   **Add session middleware**
+ *   ...
  * ```
  */
-export interface TaskFrontmatter {
+export interface PlanFrontmatter {
+  /** Path to the spec this plan implements (relative to plan file). */
+  spec: string;
+}
+
+export interface TaskAnnotation {
   id: string;
   priority: number;
   dependencies: string[];
@@ -74,7 +87,6 @@ export interface TaskFrontmatter {
 export const WIGGUM_DIR = ".wiggum";
 export const WIGGUM_PATHS = {
   config: `${WIGGUM_DIR}/config.yaml`,
-  spec: `${WIGGUM_DIR}/SPEC.md`,
   plan: `${WIGGUM_DIR}/PLAN.md`,
   prompt: `${WIGGUM_DIR}/PROMPT.md`,
   backpressure: `${WIGGUM_DIR}/BACKPRESSURE.md`,

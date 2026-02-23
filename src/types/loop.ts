@@ -2,16 +2,21 @@
  * Core domain types for a Ralph Wiggum loop.
  *
  * A Ralph loop is an autonomous coding session where Claude Code is run
- * repeatedly in headless mode to implement a feature described by a spec.
+ * repeatedly in headless mode to implement a plan. The plan references a
+ * spec so the model understands the broader context of what it is building.
  */
 
 // ---------------------------------------------------------------------------
 // Spec
 // ---------------------------------------------------------------------------
 
-/** The requirements document: PRD + how the feature fits into the existing system. */
+/**
+ * The requirements document: PRD + how the feature fits into the existing
+ * system. A spec is a standalone artifact that can be referenced by
+ * multiple plans (across different loops).
+ */
 export interface Spec {
-  /** Absolute path to the spec markdown file (e.g. .wiggum/SPEC.md). */
+  /** Absolute path to the spec markdown file. */
   filePath: string;
   /** Raw markdown content (loaded from filePath). */
   content: string;
@@ -38,10 +43,15 @@ export interface Task {
 /**
  * The implementation plan: the diff between the desired state (spec)
  * and the current state (source code), broken into atomic tasks.
+ *
+ * A plan always references exactly one spec for context. A spec may be
+ * referenced by many plans, but each Ralph loop has exactly one plan.
  */
 export interface ImplementationPlan {
-  /** Absolute path to the plan markdown file (e.g. .wiggum/PLAN.md). */
+  /** Absolute path to the plan markdown file. */
   filePath: string;
+  /** Path to the spec this plan implements (relative or absolute). */
+  specRef: string;
   tasks: Task[];
 }
 
@@ -56,7 +66,7 @@ export interface ImplementationPlan {
  * that are interpolated at runtime.
  */
 export interface PromptConfig {
-  /** Absolute path to the prompt template (e.g. .wiggum/PROMPT.md). */
+  /** Absolute path to the prompt template. */
   filePath: string;
   /** Raw template content. */
   template: string;
@@ -122,14 +132,19 @@ export type LoopStatus =
 /**
  * A Ralph Wiggum loop — the top-level aggregate that ties together all the
  * components needed to run an autonomous coding session.
+ *
+ * The primary input is the plan (which references a spec). The prompt and
+ * backpressure config control how each iteration runs.
  */
 export interface RalphLoop {
   id: string;
   name: string;
   /** Absolute path to the target project directory. */
   targetDir: string;
-  spec: Spec;
+  /** The implementation plan — primary input. References a spec. */
   plan: ImplementationPlan;
+  /** The resolved spec (loaded via plan.specRef). */
+  spec: Spec;
   prompt: PromptConfig;
   loop: LoopConfig;
   backpressure: BackpressureConfig;

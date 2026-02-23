@@ -43,15 +43,21 @@ export type {
 export type {
   PanelId,
   PanelDef,
+  DocsSubTab,
+  DocsSubTabDef,
+  MainViewMode,
   AppState,
   AppAction,
+  Command,
+  CommandContext,
   Keybinding,
 } from "./tui.js";
-export { PANELS } from "./tui.js";
+export { PANELS, DOCS_SUB_TABS } from "./tui.js";
 
 export type {
   WiggumConfig,
-  TaskFrontmatter,
+  PlanFrontmatter,
+  TaskAnnotation,
 } from "./config.js";
 export { WIGGUM_DIR, WIGGUM_PATHS } from "./config.js";
 
