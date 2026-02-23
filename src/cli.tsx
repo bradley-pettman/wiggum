@@ -7,6 +7,8 @@
  * If no project-dir is given, uses the current working directory.
  */
 
-// Placeholder — will be replaced with the Ink app once components are built.
-console.log("wiggum v0.1.0 — Ralph Wiggum loop manager");
-console.log("TUI not yet implemented. Types are ready in src/types/.");
+import React from "react";
+import { render } from "ink";
+import { App } from "./components/App.js";
+
+render(<App />);

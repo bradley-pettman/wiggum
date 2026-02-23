@@ -96,6 +96,8 @@ export interface AppState {
   selectedTaskIndex: number;
   /** What the main view is currently showing. */
   mainView: MainViewMode;
+  /** Scroll offset for doc viewer content. */
+  docScrollOffset: number;
   /** Status bar message. */
   statusMessage: string;
 }
@@ -115,6 +117,8 @@ export type AppAction =
   | { type: "VIEW_SESSION"; session: Session; live: boolean }
   | { type: "SELECT_TASK"; index: number }
   | { type: "UPDATE_TASK"; task: Task }
+  | { type: "SCROLL_DOC"; delta: number }
+  | { type: "BACK_TO_LIST" }
   | { type: "SET_STATUS"; message: string };
 
 // ---------------------------------------------------------------------------
