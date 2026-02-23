@@ -1,0 +1,40 @@
+{
+  "name": "wiggum",
+  "version": "0.1.0",
+  "description": "TUI for managing Ralph Wiggum loops — autonomous AI coding sessions",
+  "type": "module",
+  "bin": {
+    "wiggum": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.tsx",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cli",
+    "tui",
+    "ai",
+    "claude",
+    "coding-agent",
+    "automation"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.50",
+    "@inkjs/ui": "^2.0.0",
+    "ink": "^6.0.0",
+    "react": "^19.0.0",
+    "yaml": "^2.7.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
